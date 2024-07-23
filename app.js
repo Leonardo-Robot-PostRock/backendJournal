@@ -1,9 +1,10 @@
 const express = require('express');
+const cors = require('cors');
+const imageRoutes = require('./routes/imageRoutes');
 
 const app = express();
 
-const imageRoutes = require('./routes/imageRoutes');
-
+app.use(cors());
 app.use(express.json());
 app.use('/images', imageRoutes);
 
