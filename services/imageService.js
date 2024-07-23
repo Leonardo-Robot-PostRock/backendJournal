@@ -1,12 +1,21 @@
 const cloudinary = require('../config/cloudinary');
+require('dotenv').config();
 
 /**
  * Deletes a single image from Cloudinary by its public ID.
  * @param {string} publicId - The public ID of the image to delete.
  * @returns {Promise} - The result of the delete operation.
  */
-const deleteImageByPublicId = (publicId) => {
-    return cloudinary.uploader.destroy(publicId);
+const deleteImageByPublicId = async (publicId) => {
+    try {
+        const result = await cloudinary.uploader.destroy(`${process.env.CLOUDINARY_NAME_FOLDER}/${publicId}`, {
+            resource_type: 'image',
+            type: 'upload'
+        });
+        return result;
+    } catch (error) {
+        throw new Error('Failed to delete image');
+    }
 };
 
 /**
@@ -15,7 +24,11 @@ const deleteImageByPublicId = (publicId) => {
  * @returns {Promise} - The result of the delete operation.
  */
 const deleteImagesByPublicIds = (publicIds) => {
-    return cloudinary.api.delete_resources(publicIds);
+    return publicIds.map(publicId => {
+        cloudinary.api.delete_resources([`${process.env.CLOUDINARY_NAME_FOLDER}/${publicId}`], {
+            resource_type: 'image'
+        });
+    })
 };
 
 module.exports = {
