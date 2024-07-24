@@ -24,8 +24,8 @@ const deleteImageByPublicId = async (publicId) => {
  * @returns {Promise} - The result of the delete operation.
  */
 const deleteImagesByPublicIds = (publicIds) => {
-    return publicIds.map(publicId => {
-        cloudinary.api.delete_resources([`${process.env.CLOUDINARY_NAME_FOLDER}/${publicId}`], {
+    return publicIds.map(async publicId => {
+        await cloudinary.api.delete_resources([`${process.env.CLOUDINARY_NAME_FOLDER}/${publicId}`], {
             resource_type: 'image'
         });
     })
